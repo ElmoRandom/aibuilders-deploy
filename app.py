@@ -293,24 +293,37 @@ def run(my_bar,placeholder):
         result.append(pred[0])
   return result[-1]
 
-option = st.selectbox('Select Dataset',('test1','train1','self upload'))
-cur_select = st.empty()
+#option = st.selectbox('Select Dataset',('test1','train1','self upload'))
+
 # if option == 'test1':
 #     cur_select.write('1')
 
 # else:
 #     cur_select.write('2')
+my_bar = st.empty()
+placeholder = st.empty()
 if st.button('Train'):
-    my_bar = st.progress(0)
-    placeholder = st.empty()
-
-
+    my_bar.progress(0)
     image = run(my_bar, placeholder)
-      
 
+im = st.empty()
+im2 = st.empty()
 
+if st.button('Generate Image'):
+    noise = tf.random.normal([BATCH_SIZE, noise_dim])
+    image = next(iter(train_source))
+    temp = np.zeros([256,256,3])
+    temp2 = np.zeros([256,256,3])
+    generated_image = generator([image,noise], training=True)
+    for i in range(256):
+      for j in range(256):
+        for k in range(3):
+          temp[i][j][k] = image[0][i][j][k] * 0.5 + 0.5
+          temp2[i][j][k] = generated_image[0][i][j][k] * 0.5 + 0.5
+    im.image(temp, 'input image')
+    im2.image(temp2, 'generated image')
 
-
+ 
 
 
 
